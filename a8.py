@@ -71,11 +71,15 @@ for i in range(len(flight_num)):
             last_long = airport_long
             print(distance)
             country_name = airport_data["iso_country"].values[0] # US
-            countries_data = (countries.loc[countries["code"] == country_name])["name"]
+            countries_data = (countries.loc[countries["code"] == country_name])["name"].values[0]
             print(airport_name)
+            print("countries_data", countries_data)
             # G = nx.Graph()
             # G.add_node("airport_name")
             # 可能需要設last_position, current_position之類的變數來儲存位置，因為底下要算距離
             # geographic和networkx已經import了，可以直接用(geod, nx)
 
+d = nx.DiGraph()
 
+d.add_edges(route[j-1], route[j], distance = distance)
+d.add_node(route[j], name = airport_name, country = countries_data)
