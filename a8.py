@@ -11,6 +11,12 @@ geod = Geodesic.WGS84
 # f = pd.read_csv("livedata.csv")
 # print(f)
 
+
+def cal_distance(last_latitude, last_longitude, airport_latitude, airport_longitude):
+    d = round(geod.Inverse(last_latitude, last_longitude, airport_latitude, airport_longitude)['s12'] / 1852.0, 2)
+    return d
+
+
 def load_adsb_file(filename: str) -> pd.DataFrame:
     """Load a file efficiently, retaining only the most useful columns & rows.
     The original DateLogged & TimeLogged get replaced by 'LoggedAt', as datetime64. Uses Pandas read_csv() with its compression='infer' option.
@@ -44,6 +50,10 @@ for i in range(len(flight_num)):
         route = r.json()["route"]
         print(route) # ['KORD', 'KSDF']
         # 以下迴圈跑route中的點並取出需要的資訊
+        position = {}
+        last_lat = 0
+        last_long = 0
+        distance = 0
         for j in range(len(route)):
             airport_data = airports.loc[airports["ident"] == route[j]]
             airport_name = airport_data["name"]
@@ -53,13 +63,15 @@ for i in range(len(flight_num)):
             # Chicago O'Hare International Airport
             # Louisville Muhammad Ali International Airport
 
-            airport_lat = airport_data["latitude_deg"]
-            airport_long = airport_data["longitude_deg"]
-            country_name = airport_data["iso_country"]
-            countries_data = airports.loc[countries["code"] == country_name]["name"]
-            position = []
-            position.append(airport_lat, airport_long)
-
+            airport_lat = airport_data["latitude_deg"].values[0]
+            airport_long = airport_data["longitude_deg"].values[0]
+            if j != 0:
+                distance = cal_distance(airport_lat, airport_long, last_lat, last_long)
+            last_lat = airport_lat
+            last_long = airport_long
+            print(distance)
+            country_name = airport_data["iso_country"].values[0] # US
+            countries_data = (countries.loc[countries["code"] == country_name])["name"]
             print(airport_name)
             # G = nx.Graph()
             # G.add_node("airport_name")
