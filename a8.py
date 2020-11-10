@@ -45,12 +45,19 @@ for i in range(len(flight_num)):
         print(route) # ['KORD', 'KSDF']
         # 以下迴圈跑route中的點並取出需要的資訊
         for j in range(len(route)):
-            airport_name = (airports.loc[airports["ident"] == route[j]])["name"]
+            airport_data = airports.loc[airports["ident"] == route[j]]
+            airport_name = airport_data["name"]
             # type(airport_name)是一個series
             # 取出對應的機場名稱了，之後加入graph變成node
             airport_name = airport_name.values[0]
             # Chicago O'Hare International Airport
             # Louisville Muhammad Ali International Airport
+
+            airport_lat = airport_data["latitude_deg"]
+            airport_long = airport_data["longitude_deg"]
+            position = []
+            position.append(airport_lat, airport_long)
+
             print(airport_name)
             # G = nx.Graph()
             # G.add_node("airport_name")
