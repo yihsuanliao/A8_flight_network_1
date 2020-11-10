@@ -50,7 +50,7 @@ for i in range(len(flight_num)):
     r = requests.get(url)
     if r.status_code == requests.codes.ok:
         route = r.json()["route"]
-        print(route) # ['KORD', 'KSDF']
+        #print(route) # ['KORD', 'KSDF']
         # 以下迴圈跑route中的點並取出需要的資訊
         last_lat = 0
         last_long = 0
@@ -70,15 +70,15 @@ for i in range(len(flight_num)):
                 distance = cal_distance(airport_lat, airport_long, last_lat, last_long)
             last_lat = airport_lat
             last_long = airport_long
-            print(distance)
+            #print(distance)
             country_name = airport_data["iso_country"].values[0] # US
             countries_data = (countries.loc[countries["code"] == country_name])["name"].values[0]
-            print(airport_name)
-            print("countries_data", countries_data)
+            #print(airport_name)
+            #print("countries_data", countries_data)
             g.add_node(route[j], name=airport_name, country=countries_data, latitude=airport_lat, longitude=airport_long)
             if j != 0:
                 g.add_edge(route[j - 1], route[j], distance=distance)
-            print("show nodes data", nx.get_node_attributes(g, 'longitude'))
-            print("show edges:", g.edges.data())
-
+            #print("show nodes data", nx.get_node_attributes(g, 'longitude'))
+            #print("show edges:", g.edges.data())
+print(flight_num)
 # plt.draw_networkx_nodes(g, pos[list(g.nodes)])
