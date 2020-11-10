@@ -55,6 +55,8 @@ for i in range(len(flight_num)):
 
             airport_lat = airport_data["latitude_deg"]
             airport_long = airport_data["longitude_deg"]
+            country_name = airport_data["iso_country"]
+            countries_data = airports.loc[countries["code"] == country_name]["name"]
             position = []
             position.append(airport_lat, airport_long)
 
