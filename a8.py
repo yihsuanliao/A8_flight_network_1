@@ -6,6 +6,7 @@ import pandas as pd
 import networkx as nx
 from geographiclib.geodesic import Geodesic
 geod = Geodesic.WGS84
+import matplotlib as plt
 
 # use curl 99.74.38.205:30003 -o"livedata.csv" to load live data into file --> doesn't meet the requirement
 # f = pd.read_csv("livedata.csv")
@@ -40,6 +41,7 @@ countries = pd.read_csv("countries.csv")
 
 # save unique flight number
 flight_num = (af.loc[af["Callsign/FlightNum"].notna()])["Callsign/FlightNum"].unique()
+g = nx.DiGraph()
 # get request from website and load into json
 for i in range(len(flight_num)):
     print("!") # 只是用來區分不同的fight_num跑出來的結果
@@ -50,7 +52,6 @@ for i in range(len(flight_num)):
         route = r.json()["route"]
         print(route) # ['KORD', 'KSDF']
         # 以下迴圈跑route中的點並取出需要的資訊
-        position = {}
         last_lat = 0
         last_long = 0
         distance = 0
@@ -74,12 +75,10 @@ for i in range(len(flight_num)):
             countries_data = (countries.loc[countries["code"] == country_name])["name"].values[0]
             print(airport_name)
             print("countries_data", countries_data)
-            # G = nx.Graph()
-            # G.add_node("airport_name")
-            # 可能需要設last_position, current_position之類的變數來儲存位置，因為底下要算距離
-            # geographic和networkx已經import了，可以直接用(geod, nx)
+            g.add_node(route[j], name=airport_name, country=countries_data, latitude=airport_lat, longitude=airport_long)
+            if j != 0:
+                g.add_edge(route[j - 1], route[j], distance=distance)
+            print("show nodes data", nx.get_node_attributes(g, 'longitude'))
+            print("show edges:", g.edges.data())
 
-d = nx.DiGraph()
-
-d.add_edges(route[j-1], route[j], distance = distance)
-d.add_node(route[j], name = airport_name, country = countries_data)
+# plt.draw_networkx_nodes(g, pos[list(g.nodes)])
