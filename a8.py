@@ -30,8 +30,8 @@ airtraffic = 'airtraffic_20200710.csv'
 af = load_adsb_file(airtraffic)
 airports = pd.read_csv("airports.csv")
 countries = pd.read_csv("countries.csv")
-
 # print(af)
+
 # save unique flight number
 flight_num = (af.loc[af["Callsign/FlightNum"].notna()])["Callsign/FlightNum"].unique()
 # get request from website and load into json
@@ -56,5 +56,5 @@ for i in range(len(flight_num)):
             # G.add_node("airport_name")
             # 可能需要設last_position, current_position之類的變數來儲存位置，因為底下要算距離
             # geographic和networkx已經import了，可以直接用(geod, nx)
-            # airpots.csv的B column是ICAO，找出對照的機場名稱(D column)，可能用(airports.loc[...])[name]來取？
+
 
