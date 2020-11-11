@@ -33,7 +33,6 @@ dic = defaultdict(list)
 callsign_uni = []
 g = nx.DiGraph()
 for line in sys.stdin:
-    #aircraft = open(sys.stdin, 'r')
     line = line.split(",")
     callsign = line[10].strip()
     if callsign != "": # if callsign has value
@@ -58,7 +57,7 @@ for line in sys.stdin:
                     # type(airport_name)is a series
                     # Chicago O'Hare International Airport
                     # Louisville Muhammad Ali International Airport
-                    print(airport_name)
+                    # print(airport_name)
                     airport_lat = airport_data["latitude_deg"].values[0]
                     airport_long = airport_data["longitude_deg"].values[0]
                     country_name = airport_data["iso_country"].values[0]  # US
@@ -78,7 +77,7 @@ for line in sys.stdin:
                     # if len(route) > 2:
                     # print("show nodes data", nx.get_node_attributes(g, 'longitude'))
                     # print("show nodes data", g.nodes)
-                    print("show edges:", g.edges.data())
+                    # print("show edges:", g.edges.data())
 
 
 # How many distinct airports have been discovered?
