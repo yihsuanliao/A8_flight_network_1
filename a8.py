@@ -4,6 +4,8 @@ import lxml.html
 import re
 import pandas as pd
 import networkx as nx
+from networkx import NetworkXError
+from python_utils import not_implemented_for
 from geographiclib.geodesic import Geodesic
 geod = Geodesic.WGS84
 import matplotlib as plt
@@ -44,10 +46,11 @@ flight_num = (af.loc[af["Callsign/FlightNum"].notna()])["Callsign/FlightNum"].un
 g = nx.DiGraph()
 # get request from website and load into json
 for i in range(len(flight_num)):
-    print("!") # 只是用來區分不同的fight_num跑出來的結果
+    #print("!") # 只是用來區分不同的fight_num跑出來的結果
     flight_num[i] = flight_num[i].strip()
     url = "https://opensky-network.org/api/routes?callsign=" + flight_num[i]
     r = requests.get(url)
+
     if r.status_code == requests.codes.ok:
         route = r.json()["route"]
         #print(route) # ['KORD', 'KSDF']
@@ -80,7 +83,7 @@ for i in range(len(flight_num)):
                 g.add_edge(route[j - 1], route[j], distance=distance)
             #print("show nodes data", nx.get_node_attributes(g, 'longitude'))
             #print("show edges:", g.edges.data())
-print(flight_num)
+#print(flight_num)
 # plt.draw_networkx_nodes(g, pos[list(g.nodes)])
 
 
@@ -98,7 +101,7 @@ airports['id'].nunique()
 # List all the distinct countries with airports in the graph.
 aircraft_list = pd.DataFrame(airports.groupby(['iso_country'])['name'].unique())
 country_name = pd.DataFrame(countries.groupby(['code'])['name'].unique())
-distinct_countries = pd.merge(aircraft_list, country_name, left_index = True, right_index = True, how = 'left').rename(columns = {"name_x": "Airports", "name_y": "Country"})
+distinct_countries = pd.merge(aircraft_list,country_name, left_index = True, right_index = True, how = 'left').rename(columns = {"name_x": "Airports", "name_y": "Country"})
 print(distinct_countries)
 # will have 242x2 rows
 
@@ -111,3 +114,97 @@ print(distinct_countries)
 # Usually it will not be strongly connected. When it’s not, output these:
 ## Display if the graph is "weakly connected"? That means ignoring direction of flight segments, do all the airports have some sequence of flights connecting to the others? Use the is_weakly_connected() function.
 ## Giventherouteswehavesofar,listallairportsthatare"deadends"(fromwhichnoknownflight leaves).
+
+"""Algorithms to calculate reciprocity in a directed graph."""
+
+
+__all__ = ["reciprocity", "overall_reciprocity"]
+
+
+def reciprocity(G, nodes=None):
+    r"""Compute the reciprocity in a directed graph.
+
+    The reciprocity of a directed graph is defined as the ratio
+    of the number of edges pointing in both directions to the total
+    number of edges in the graph.
+    Formally, $r = |{(u,v) \in G|(v,u) \in G}| / |{(u,v) \in G}|$.
+
+    The reciprocity of a single node u is defined similarly,
+    it is the ratio of the number of edges in both directions to
+    the total number of edges attached to node u.
+
+    Parameters
+    ----------
+    G : graph
+       A networkx directed graph
+    nodes : container of nodes, optional (default=whole graph)
+       Compute reciprocity for nodes in this container.
+
+    Returns
+    -------
+    out : dictionary
+       Reciprocity keyed by node label.
+
+    Notes
+    -----
+    The reciprocity is not defined for isolated nodes.
+    In such cases this function will return None.
+
+    """
+    # If `nodes` is not specified, calculate the reciprocity of the graph.
+    if nodes is None:
+        return overall_reciprocity(G)
+
+    # If `nodes` represents a single node in the graph, return only its
+    # reciprocity.
+    if nodes in G:
+        reciprocity = next(_reciprocity_iter(G, nodes))[1]
+        if reciprocity is None:
+            raise NetworkXError("Not defined for isolated nodes.")
+        else:
+            return reciprocity
+
+    # Otherwise, `nodes` represents an iterable of nodes, so return a
+    # dictionary mapping node to its reciprocity.
+    return dict(_reciprocity_iter(G, nodes))
+
+
+
+def _reciprocity_iter(G, nodes):
+    """ Return an iterator of (node, reciprocity).
+    """
+    n = G.nbunch_iter(nodes)
+    for node in n:
+        pred = set(G.predecessors(node))
+        succ = set(G.successors(node))
+        overlap = pred & succ
+        n_total = len(pred) + len(succ)
+
+        # Reciprocity is not defined for isolated nodes.
+        # Return None.
+        if n_total == 0:
+            yield (node, None)
+        else:
+            reciprocity = 2.0 * float(len(overlap)) / float(n_total)
+            yield (node, reciprocity)
+
+
+
+def overall_reciprocity(G):
+    """Compute the reciprocity for the whole graph.
+
+    See the doc of reciprocity for the definition.
+
+    Parameters
+    ----------
+    G : graph
+       A networkx graph
+
+    """
+    n_all_edge = G.number_of_edges()
+    n_overlap_edge = (n_all_edge - G.to_undirected().number_of_edges()) * 2
+
+    if n_all_edge == 0:
+        raise NetworkXError("Not defined for empty graphs")
+
+    return float(n_overlap_edge) / float(n_all_edge)
