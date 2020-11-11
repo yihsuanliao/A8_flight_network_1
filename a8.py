@@ -207,6 +207,39 @@ def is_strongly_connected(G):
         raise nx.NetworkXPointlessConcept(
             """Connectivity is undefined for the null graph.""")
 
-    print('If the graph is "strongly connected?',len(list(strongly_connected_components(G))[0]) == len(G))
-
+    print('If the graph is strongly connected?',len(list(strongly_connected_components(G))[0]) == len(G))
+#the above is the source code from python documentation
 is_strongly_connected(g)
+
+def weakly_connected_components(G):
+    seen = set()
+    for v in G:
+        if v not in seen:
+            c = set(_plain_bfs(G, v))
+            yield c
+            seen.update(c)
+def _plain_bfs(G, source):
+    Gsucc = G.succ
+    Gpred = G.pred
+
+    seen = set()
+    nextlevel = {source}
+    while nextlevel:
+        thislevel = nextlevel
+        nextlevel = set()
+        for v in thislevel:
+            if v not in seen:
+                yield v
+                seen.add(v)
+                nextlevel.update(Gsucc[v])
+                nextlevel.update(Gpred[v])
+
+def is_weakly_connected(G):
+    if len(G) == 0:
+        raise nx.NetworkXPointlessConcept(
+            """Connectivity is undefined for the null graph.""")
+
+    print('If the graph is weekly connected?',len(list(weakly_connected_components(G))[0]) == len(G))
+
+# the above is the source code from python documentation
+is_weakly_connected(g)
