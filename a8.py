@@ -4,8 +4,8 @@ import lxml.html
 import re
 import pandas as pd
 import networkx as nx
+#from python_utils import not_implemented_for
 from networkx import NetworkXError
-from python_utils import not_implemented_for
 from geographiclib.geodesic import Geodesic
 geod = Geodesic.WGS84
 import matplotlib as plt
@@ -126,6 +126,7 @@ nx.is_strongly_connected(g)
 __all__ = ["reciprocity", "overall_reciprocity"]
 
 
+
 def reciprocity(G, nodes=None):
     r"""Compute the reciprocity in a directed graph.
 
@@ -211,5 +212,7 @@ def overall_reciprocity(G):
 
     if n_all_edge == 0:
         raise NetworkXError("Not defined for empty graphs")
+    print(float(n_overlap_edge) / float(n_all_edge))
 
-    return float(n_overlap_edge) / float(n_all_edge)
+reciprocity(g)
+overall_reciprocity(g)
