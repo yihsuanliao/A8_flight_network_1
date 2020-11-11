@@ -81,14 +81,14 @@ for line in sys.stdin:
 
 
 # How many distinct airports have been discovered?
-print(airports['id'].nunique())
+##print(airports['id'].nunique())
 # answer: 58567
 
 # List all the distinct countries with airports in the graph.
 aircraft_list = pd.DataFrame(airports.groupby(['iso_country'])['name'].unique())
 country_name = pd.DataFrame(countries.groupby(['code'])['name'].unique())
 distinct_countries = pd.merge(aircraft_list,country_name, left_index = True, right_index = True, how = 'left').rename(columns = {"name_x": "Airports", "name_y": "Country"})
-print(distinct_countries)
+##print(distinct_countries)
 # will have 242x2 rows
 
 # Display the percentage of edges where the reverse edge also exists. That means where it’s possible to fly
@@ -105,7 +105,13 @@ nx.is_strongly_connected(g)
 # Usually it will not be strongly connected. When it’s not, output these:
 ## Display if the graph is "weakly connected"? That means ignoring direction of flight segments, do all the airports have some sequence of flights connecting to the others? Use the is_weakly_connected() function.
 ## Giventherouteswehavesofar,listallairportsthatare"deadends"(fromwhichnoknownflight leaves).
-
+out = nx.out_degree_centrality(g)
+out_result = []
+for key in out:
+    # print(key)
+    if out[key] == 0.0: # dead end
+        out_result.append(key)
+print(out_result)
 """Algorithms to calculate reciprocity in a directed graph."""
 
 
