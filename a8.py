@@ -65,8 +65,8 @@ for i in range(aircraft_num):
             r = requests.get(url)
             if r.status_code == requests.codes.ok:
                 route = r.json()["route"]
-                if len(route) > 2:
-                    print(route) # ['KORD', 'KSDF']
+                #if len(route) > 2:
+                    #print(route) # ['KORD', 'KSDF']
                 # 以下迴圈跑route中的點並取出需要的資訊
                 last_lat = 0
                 last_long = 0
@@ -95,13 +95,14 @@ for i in range(aircraft_num):
                     g.add_node(route[k], name=airport_name, country=countries_data, latitude=airport_lat, longitude=airport_long)
                     if k != 0:
                         g.add_edge(route[k - 1], route[k], distance=distance)
-                    if len(route) > 2:
+                    #if len(route) > 2:
                         #print("show nodes data", nx.get_node_attributes(g, 'longitude'))
-                        print("show nodes data", g.nodes)
-                        print("show edges:", g.edges.data())
+                        #print("show nodes data", g.nodes)
+                        #print("show edges:", g.edges.data())
 # TODO: a LIST of all FlightNumbers seen that fly that same route
 # 若FlightNumbers是指aircrafthex的話，再問問看是不是一個callsign只會有一個飛行路線，是的話跑callsign的list，然後看哪些aircrafthex有包含該callsign，就代表這些aircrafthex有相同的飛行路線
-# 若是指callsign的話，就要把route拿出來，然後看和哪些callsign的route相符合
+# 若是指callsign的話，就要把route拿出來，然後看和哪些callsign的route相符合 可能創個dic，key用route?，value用callsign
+# 每跑一個callsign，就加到route的dic裡面，然後全部callsign跑完之後再處理attribute: flight？或是有其他方法(ex: 有沒有update之類的語法)
 
 # select distinct aircrafthex to callsign
 #af1 = pd.DataFrame(af.groupby(['Callsign/FlightNum'])['AircraftHex'].unique())
