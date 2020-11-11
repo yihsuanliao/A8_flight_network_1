@@ -207,6 +207,6 @@ def is_strongly_connected(G):
         raise nx.NetworkXPointlessConcept(
             """Connectivity is undefined for the null graph.""")
 
-    print('if the graph is "strongly connected?',len(list(strongly_connected_components(G))[0]) == len(G))
+    print('If the graph is "strongly connected?',len(list(strongly_connected_components(G))[0]) == len(G))
 
 is_strongly_connected(g)
