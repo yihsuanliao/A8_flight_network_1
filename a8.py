@@ -35,7 +35,7 @@ g = nx.DiGraph()
 for line in sys.stdin:
     #aircraft = open(sys.stdin, 'r')
     line = line.split(",")
-    callsign = line[10]
+    callsign = line[10].strip()
     if callsign != "": # if callsign has value
         aircrafthex = line[4]
         if callsign not in dic[aircrafthex]: # we only want the unique callsigns for one aircrafthex
@@ -70,14 +70,15 @@ for line in sys.stdin:
                         if g.has_edge(route[k - 1], route[k]) is False:  # if edge not exist, calculate distance
                             distance = cal_distance(airport_lat, airport_long, last_lat, last_long)
                             g.add_edge(route[k - 1], route[k], Flights=[callsign], distance=distance)
-
-                    # update flight attribute
+                        else:
+                            # update flights attribute (append)
+                            g[route[k - 1]][route[k]]['Flights'].append(callsign)
                     last_lat = airport_lat
                     last_long = airport_long
                     # if len(route) > 2:
                     # print("show nodes data", nx.get_node_attributes(g, 'longitude'))
                     # print("show nodes data", g.nodes)
-                    # print("show edges:", g.edges.data())
+                    print("show edges:", g.edges.data())
 
 
 # How many distinct airports have been discovered?
@@ -209,4 +210,3 @@ def is_weakly_connected(G):
 
 # the above is the source code from python documentation
 is_weakly_connected(g)
-
