@@ -111,7 +111,7 @@ for key in out:
     # print(key)
     if out[key] == 0.0: # dead end
         out_result.append(key)
-print(out_result)
+print("dead end: ", out_result)
 """Algorithms to calculate reciprocity in a directed graph."""
 
 
