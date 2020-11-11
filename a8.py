@@ -7,6 +7,7 @@ import networkx as nx
 #from python_utils import not_implemented_for
 from networkx import NetworkXError
 from geographiclib.geodesic import Geodesic
+from sys import stdin
 geod = Geodesic.WGS84
 import matplotlib as plt
 
@@ -157,5 +158,55 @@ def overall_reciprocity(G):
     if n_all_edge == 0:
         raise NetworkXError("Not defined for empty graphs")
     print('The percentage of edges where the reverse edge also exists.',float(n_overlap_edge) / float(n_all_edge))
-
+#the above is the source code from python documentation
 overall_reciprocity(g)
+
+def strongly_connected_components(G):
+    preorder = {}
+    lowlink = {}
+    scc_found = {}
+    scc_queue = []
+    i = 0     # Preorder counter
+    for source in G:
+        if source not in scc_found:
+            queue = [source]
+            while queue:
+                v = queue[-1]
+                if v not in preorder:
+                    i = i + 1
+                    preorder[v] = i
+                done = 1
+                v_nbrs = G[v]
+                for w in v_nbrs:
+                    if w not in preorder:
+                        queue.append(w)
+                        done = 0
+                        break
+                if done == 1:
+                    lowlink[v] = preorder[v]
+                    for w in v_nbrs:
+                        if w not in scc_found:
+                            if preorder[w] > preorder[v]:
+                                lowlink[v] = min([lowlink[v], lowlink[w]])
+                            else:
+                                lowlink[v] = min([lowlink[v], preorder[w]])
+                    queue.pop()
+                    if lowlink[v] == preorder[v]:
+                        scc_found[v] = True
+                        scc = {v}
+                        while scc_queue and preorder[scc_queue[-1]] > preorder[v]:
+                            k = scc_queue.pop()
+                            scc_found[k] = True
+                            scc.add(k)
+                        yield scc
+                    else:
+                        scc_queue.append(v)
+
+def is_strongly_connected(G):
+    if len(G) == 0:
+        raise nx.NetworkXPointlessConcept(
+            """Connectivity is undefined for the null graph.""")
+
+    print('if the graph is "strongly connected?',len(list(strongly_connected_components(G))[0]) == len(G))
+
+is_strongly_connected(g)
