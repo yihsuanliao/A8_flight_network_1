@@ -88,11 +88,11 @@ print(flight_num)
 af1 = pd.DataFrame(af.groupby(['Callsign/FlightNum'])['AircraftHex'].unique())
 af = af.dropna(subset = ['Callsign/FlightNum'])
 af2 = pd.DataFrame(af.groupby(['AircraftHex'])['Callsign/FlightNum'].unique())
-af2
+print(af2)
 
 
 # How many distinct airports have been discovered?
-airports['id'].nunique()
+print(airports['id'].nunique())
 # answer: 58567
 
 # List all the distinct countries with airports in the graph.
