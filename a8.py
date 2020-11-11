@@ -89,3 +89,25 @@ af1 = pd.DataFrame(af.groupby(['Callsign/FlightNum'])['AircraftHex'].unique())
 af = af.dropna(subset = ['Callsign/FlightNum'])
 af2 = pd.DataFrame(af.groupby(['AircraftHex'])['Callsign/FlightNum'].unique())
 af2
+
+
+# How many distinct airports have been discovered?
+airports['id'].nunique()
+# answer: 58567
+
+# List all the distinct countries with airports in the graph.
+aircraft_list = pd.DataFrame(airports.groupby(['iso_country'])['name'].unique())
+country_name = pd.DataFrame(countries.groupby(['code'])['name'].unique())
+distinct_countries = pd.merge(aircraft_list, country_name, left_index = True, right_index = True, how = 'left').rename(columns = {"name_x": "Airports", "name_y": "Country"})
+print(distinct_countries)
+# will have 242x2 rows
+
+# Display the percentage of edges where the reverse edge also exists. That means where it’s possible to fly
+# directly from airport A to B, then directly back to A. [This is easy with the networkx reciprocity() function]
+
+# Display if the graph is "strongly connected". That means it’s possible to somehow fly from each known airport
+# to any other. Use the is_strongly_connected() function!
+
+# Usually it will not be strongly connected. When it’s not, output these:
+## Display if the graph is "weakly connected"? That means ignoring direction of flight segments, do all the airports have some sequence of flights connecting to the others? Use the is_weakly_connected() function.
+## Giventherouteswehavesofar,listallairportsthatare"deadends"(fromwhichnoknownflight leaves).
