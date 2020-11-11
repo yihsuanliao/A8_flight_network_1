@@ -104,9 +104,14 @@ print(distinct_countries)
 
 # Display the percentage of edges where the reverse edge also exists. That means where it’s possible to fly
 # directly from airport A to B, then directly back to A. [This is easy with the networkx reciprocity() function]
+nx.reciprocity(g, nodes = None)  # 算出來不知道對不對
+# answer: 0.41047120418848165
 
 # Display if the graph is "strongly connected". That means it’s possible to somehow fly from each known airport
 # to any other. Use the is_strongly_connected() function!
+nx.is_strongly_connected(g)
+# 這裡還要再改，應該要是很多個true跟false，但我出來只有一個false
+
 
 # Usually it will not be strongly connected. When it’s not, output these:
 ## Display if the graph is "weakly connected"? That means ignoring direction of flight segments, do all the airports have some sequence of flights connecting to the others? Use the is_weakly_connected() function.
