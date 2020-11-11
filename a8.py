@@ -82,3 +82,10 @@ for i in range(len(flight_num)):
             #print("show edges:", g.edges.data())
 print(flight_num)
 # plt.draw_networkx_nodes(g, pos[list(g.nodes)])
+
+
+# select distinct aircrafthex to callsign
+af1 = pd.DataFrame(af.groupby(['Callsign/FlightNum'])['AircraftHex'].unique())
+af = af.dropna(subset = ['Callsign/FlightNum'])
+af2 = pd.DataFrame(af.groupby(['AircraftHex'])['Callsign/FlightNum'].unique())
+af2
