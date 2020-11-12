@@ -55,14 +55,14 @@ def output(graph):
 
 # How many distinct airports have been discovered?
 def q1(graph: dict) -> int:
-    n = len(nx.get_node_attributes(graph, 'airport_name'))
+    n = len(nx.get_node_attributes(graph, 'name'))
     return n
 # answer: 58567
 
 # List all the distinct countries with airports in the graph.
 def q2(graph: dict) -> list:
     clist = []
-    country = nx.get_node_attributes(graph, 'countries_data') # {"KORD": United States...}
+    country = nx.get_node_attributes(graph, 'country') # {"KORD": United States...}
     for key in country:
         c = country[key]
         if c not in clist:
@@ -102,8 +102,8 @@ dic = defaultdict(list)
 callsign_uni = []
 g = nx.DiGraph()
 startpoint = 0
-
-for line in sys.stdin:
+firstline = True
+for line in sys.stdin: # TODO: (debug) when there is another input, startpoint shoule set to zero, firstline should set to True
     line = line.split(",")
     callsign = line[10].strip()
     timestamp = line[9].strip()
@@ -111,11 +111,13 @@ for line in sys.stdin:
     timestamp = timestamp[0:8]
     timestamp = timestamp.split(":")
     timestamp = int(timestamp[0]) * 3600 + int(timestamp[1]) * 60 + int(timestamp[2]) # 0
-    interval = 5 * 60
+    interval = 15 * 60
+    if firstline is True:
+        startpoint = timestamp
+        firstline = False
     # print(startpoint)
-    if timestamp == startpoint + interval:  # 0 + 5 = 5
+    if timestamp >= startpoint + interval:  # 0 + 5 = 5
         # TODO: create a output function and call
-
         # -> output data write a function
         output(g)
         startpoint = timestamp # 5
@@ -148,8 +150,10 @@ for line in sys.stdin:
                     country_name = airport_data["iso_country"].values[0]  # US
                     countries_data = (countries.loc[countries["code"] == country_name])["name"].values[0] # United States
                     # add node and those information
+                    # print(countries_data)
                     g.add_node(route[k], name=airport_name, country=countries_data, latitude=airport_lat,
                                longitude=airport_long)
+                    # print("show nodes data:", nx.get_node_attributes(g, 'country'))
                     if k != 0:  # if k = 0, there will be no distance
                         if g.has_edge(route[k - 1], route[k]) is False:  # if edge not exist, calculate distance
                             distance = cal_distance(airport_lat, airport_long, last_lat, last_long)
@@ -160,7 +164,6 @@ for line in sys.stdin:
                     last_lat = airport_lat
                     last_long = airport_long
                     # if len(route) > 2:
-                    print("show nodes data:", type(nx.get_node_attributes(g, 'airport_name')))
                     # print("show nodes data", g.nodes)
                     # print("show edges:", g.edges.data())
 
