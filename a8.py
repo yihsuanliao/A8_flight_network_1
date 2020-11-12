@@ -38,11 +38,16 @@ if line[9] == startpoint + interval: # 0 + 5
     -> output data
     startpoint = line[9] # 5
 """
+# TODO: complete this function
+def output():
+
+
 
 dic = defaultdict(list)
 callsign_uni = []
 g = nx.DiGraph()
 startpoint = 0
+
 for line in sys.stdin:
     line = line.split(",")
     callsign = line[10].strip()
@@ -54,7 +59,9 @@ for line in sys.stdin:
     interval = 5 * 60
     # print(startpoint)
     if timestamp == startpoint + interval:  # 0 + 5 = 5
+        # TODO: create a output function and call
         # -> output data write a function
+        #output()
         startpoint = timestamp # 5
         print("startpoint: ", startpoint)
     if callsign != "": # if callsign has value
