@@ -17,6 +17,19 @@ countries = pd.read_csv("countries.csv")
 
 
 def cal_distance(last_latitude, last_longitude, airport_latitude, airport_longitude):
+    """ Calculate the distance between two airports
+
+    :param last_latitude:
+    :param last_longitude:
+    :param airport_latitude:
+    :param airport_longitude:
+    :return:
+
+    >>> d = cal_distance(-41.32, 174.81, 40.96, -5.50)
+    10777.36
+    >>> d = cal_distance(41.32, 174.81, 40.96, 5.50)
+    5846.85
+    """
     d = round(geod.Inverse(last_latitude, last_longitude, airport_latitude, airport_longitude)['s12'] / 1852.0, 2)
     return d
 
@@ -27,7 +40,6 @@ result = open("result.txt", 'w')
 def output(l):
     print(l)
     threading.Timer(5, output).start()
-
 """
 """
 startpoint = line[9] # (row1) # '00:18:19.169'
@@ -39,7 +51,7 @@ if line[9] == startpoint + interval: # 0 + 5
     startpoint = line[9] # 5
 """
 # TODO: complete this function
-def output():
+
 
 
 
@@ -60,6 +72,7 @@ for line in sys.stdin:
     # print(startpoint)
     if timestamp == startpoint + interval:  # 0 + 5 = 5
         # TODO: create a output function and call
+
         # -> output data write a function
         #output()
         startpoint = timestamp # 5
@@ -204,6 +217,7 @@ def strongly_connected_components(G):
                         scc_queue.append(v)
 
 def is_strongly_connected(G):
+
     if len(G) == 0:
         raise nx.NetworkXPointlessConcept(
             """Connectivity is undefined for the null graph.""")
@@ -220,6 +234,7 @@ def weakly_connected_components(G):
             yield c
             seen.update(c)
 def _plain_bfs(G, source):
+
     Gsucc = G.succ
     Gpred = G.pred
 
@@ -236,6 +251,11 @@ def _plain_bfs(G, source):
                 nextlevel.update(Gpred[v])
 
 def is_weakly_connected(G):
+    """
+    >>> g
+    >>> is_weakly_connected(g)
+    True
+    """
     if len(G) == 0:
         raise nx.NetworkXPointlessConcept(
             """Connectivity is undefined for the null graph.""")
