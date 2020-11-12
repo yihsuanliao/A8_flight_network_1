@@ -36,24 +36,67 @@ def cal_distance(last_latitude, last_longitude, airport_latitude, airport_longit
 
 result = open("result.txt", 'w')
 
-"""
-def output(l):
-    print(l)
-    threading.Timer(5, output).start()
-"""
-"""
-startpoint = line[9] # (row1) # '00:18:19.169'
-startpoint = startpoint.split(":") # ['00', '18', '19.169']
-startpoint = int(startpoint[1])
-interval = 5
-if line[9] == startpoint + interval: # 0 + 5
-    -> output data
-    startpoint = line[9] # 5
-"""
+
+
 # TODO: complete this function
+def output(graph):
+    one = q1(graph)
+    print("Q1:", one)
+    two = q2(graph)
+    print("Q2:", two)
+    three = q3(graph)
+    print("Q3:", three)
+    four = q4(graph)
+    print("Q4:", four)
+    five_1 = q5_1(graph)
+    print("Q5_1:", five_1)
+    five_2 = q5_2(graph)
+    print("Q5_2:", five_2)
 
+# How many distinct airports have been discovered?
+def q1(graph: dict) -> int:
+    n = len(nx.get_node_attributes(graph, 'airport_name'))
+    return n
+# answer: 58567
 
+# List all the distinct countries with airports in the graph.
+def q2(graph: dict) -> list:
+    clist = []
+    country = nx.get_node_attributes(graph, 'countries_data') # {"KORD": United States...}
+    for key in country:
+        c = country[key]
+        if c not in clist:
+            clist.append(c)
+    return clist
 
+def q3(graph: dict) -> float:
+    # Display the percentage of edges where the reverse edge also exists. That means where it’s possible to fly
+    # directly from airport A to B, then directly back to A. [This is easy with the networkx reciprocity() function]
+    ans = nx.reciprocity(graph, nodes=None)  # 算出來不知道對不對
+    # answer: 0.41047120418848165
+    return ans
+
+def q4(graph: dict) -> bool:
+    # Display if the graph is "strongly connected". That means it’s possible to somehow fly from each known airport
+    # to any other. Use the is_strongly_connected() function!
+    ans = nx.is_strongly_connected(graph)
+    # 這裡還要再改，應該要是很多個true跟false，但我出來只有一個false
+    return ans
+
+def q5_1(graph: dict) -> bool:
+    # Usually it will not be strongly connected. When it’s not, output these:
+    ## Display if the graph is "weakly connected"? That means ignoring direction of flight segments, do all the airports have some sequence of flights connecting to the others? Use the is_weakly_connected() function.
+    ## Giventherouteswehavesofar,listallairportsthatare"deadends"(fromwhichnoknownflight leaves).
+    ans = nx.is_weakly_connected(graph)
+    return ans
+
+def q5_2(graph) -> list:
+    out = nx.out_degree_centrality(graph)
+    out_result = []
+    for key in out:
+        if out[key] == 0.0:  # dead end
+            out_result.append(key)
+    return out_result
 
 dic = defaultdict(list)
 callsign_uni = []
@@ -74,7 +117,7 @@ for line in sys.stdin:
         # TODO: create a output function and call
 
         # -> output data write a function
-        #output()
+        output(g)
         startpoint = timestamp # 5
         print("startpoint: ", startpoint)
     if callsign != "": # if callsign has value
@@ -117,43 +160,21 @@ for line in sys.stdin:
                     last_lat = airport_lat
                     last_long = airport_long
                     # if len(route) > 2:
-                    # print("show nodes data", nx.get_node_attributes(g, 'longitude'))
+                    print("show nodes data:", type(nx.get_node_attributes(g, 'airport_name')))
                     # print("show nodes data", g.nodes)
                     # print("show edges:", g.edges.data())
 
 
-# How many distinct airports have been discovered?
-##print(airports['id'].nunique())
-# answer: 58567
-
-# List all the distinct countries with airports in the graph.
-aircraft_list = pd.DataFrame(airports.groupby(['iso_country'])['name'].unique())
-country_name = pd.DataFrame(countries.groupby(['code'])['name'].unique())
-distinct_countries = pd.merge(aircraft_list,country_name, left_index = True, right_index = True, how = 'left').rename(columns = {"name_x": "Airports", "name_y": "Country"})
-##print(distinct_countries)
-# will have 242x2 rows
-
-# Display the percentage of edges where the reverse edge also exists. That means where it’s possible to fly
-# directly from airport A to B, then directly back to A. [This is easy with the networkx reciprocity() function]
-nx.reciprocity(g, nodes = None)  # 算出來不知道對不對
-# answer: 0.41047120418848165
-
-# Display if the graph is "strongly connected". That means it’s possible to somehow fly from each known airport
-# to any other. Use the is_strongly_connected() function!
-nx.is_strongly_connected(g)
-# 這裡還要再改，應該要是很多個true跟false，但我出來只有一個false
 
 
-# Usually it will not be strongly connected. When it’s not, output these:
-## Display if the graph is "weakly connected"? That means ignoring direction of flight segments, do all the airports have some sequence of flights connecting to the others? Use the is_weakly_connected() function.
-## Giventherouteswehavesofar,listallairportsthatare"deadends"(fromwhichnoknownflight leaves).
-out = nx.out_degree_centrality(g)
-out_result = []
-for key in out:
-    # print(key)
-    if out[key] == 0.0: # dead end
-        out_result.append(key)
-print("dead end: ", out_result)
+
+
+
+
+
+
+
+
 """Algorithms to calculate reciprocity in a directed graph."""
 
 
