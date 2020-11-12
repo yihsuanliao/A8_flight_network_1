@@ -29,12 +29,34 @@ def output(l):
     threading.Timer(5, output).start()
 
 """
+"""
+startpoint = line[9] # (row1) # '00:18:19.169'
+startpoint = startpoint.split(":") # ['00', '18', '19.169']
+startpoint = int(startpoint[1])
+interval = 5
+if line[9] == startpoint + interval: # 0 + 5
+    -> output data
+    startpoint = line[9] # 5
+"""
+
 dic = defaultdict(list)
 callsign_uni = []
 g = nx.DiGraph()
+startpoint = 0
 for line in sys.stdin:
     line = line.split(",")
     callsign = line[10].strip()
+    timestamp = line[9].strip()
+    # print(timestamp[0:8])
+    timestamp = timestamp[0:8]
+    timestamp = timestamp.split(":")
+    timestamp = int(timestamp[0]) * 3600 + int(timestamp[1]) * 60 + int(timestamp[2]) # 0
+    interval = 5 * 60
+    # print(startpoint)
+    if timestamp == startpoint + interval:  # 0 + 5 = 5
+        # -> output data write a function
+        startpoint = timestamp # 5
+        print("startpoint: ", startpoint)
     if callsign != "": # if callsign has value
         aircrafthex = line[4]
         if callsign not in dic[aircrafthex]: # we only want the unique callsigns for one aircrafthex
