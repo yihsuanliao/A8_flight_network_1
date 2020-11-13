@@ -26,9 +26,9 @@ def cal_distance(last_latitude, last_longitude, airport_latitude, airport_longit
     :param airport_latitude:
     :param airport_longitude:
     :return:
-    >>> d = cal_distance(-41.32, 174.81, 40.96, -5.50)
+    >>> cal_distance(-41.32, 174.81, 40.96, -5.50)
     10777.36
-    >>> d = cal_distance(41.32, 174.81, 40.96, 5.50)
+    >>> cal_distance(41.32, 174.81, 40.96, 5.50)
     5846.85
     """
     d = round(geod.Inverse(last_latitude, last_longitude, airport_latitude, airport_longitude)['s12'] / 1852.0, 2)
