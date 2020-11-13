@@ -86,6 +86,10 @@ def get_dead_ends(graph) -> list:
     List all airports that are "dead ends"
     :param graph:
     :return: output the airports that are dead ends
+    >>> get_dead_ends(['KORD', 'KSDF', 'RJBB', 'KIND', 'KMZJ', 'KJFK', 'KOAK', 'PANC', 'CYWG', 'KMKE', 'KCVG', 'KILN', 'KSEA', 'KSFO', 'KSJC', 'CYVR', 'KATL', 'KTUS', 'KONT', 'KDEN', 'EINN', 'KDFW', 'KTUL', 'KBDL', 'KRFD'])
+    ['KIND', 'KJFK', 'KCVG', 'KSEA', 'KSFO', 'KONT', 'KTUL', 'KBDL', 'KRFD']
+    >>> get_dead_ends(['KORD', 'KSDF', 'RJBB', 'KIND', 'KMZJ', 'KJFK', 'KOAK', 'PANC', 'CYWG', 'KMKE', 'KCVG', 'KILN', 'KSEA', 'KSFO', 'KSJC', 'CYVR', 'KATL', 'KTUS', 'KONT', 'KDEN', 'EINN', 'KDFW', 'KTUL', 'KBDL', 'KRFD', 'MMLO', 'KSAN', 'KBOS', 'KLAX', 'MMGL', 'KLAS', 'KDTW'])
+    ['KJFK', 'KCVG', 'KSEA', 'KSFO', 'KONT', 'KTUL', 'KBDL', 'KRFD', 'MMLO', 'KBOS', 'MMGL', 'KDTW']
     """
     #print(graph)
     out = nx.out_degree_centrality(graph)
