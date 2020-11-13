@@ -29,7 +29,7 @@ def cal_distance(last_latitude, last_longitude, airport_latitude, airport_longit
     :param last_longitude: the next longtitude
     :param airport_latitude: the original latitude
     :param airport_longitude: the original longitude
-    :return:
+    :return: the distance between 2 airports
     >>> cal_distance(-41.32, 174.81, 40.96, -5.50)
     10777.36
     >>> cal_distance(41.32, 174.81, 40.96, 5.50)
@@ -96,7 +96,7 @@ def get_percentage(graph: dict) -> float:
     """
     Function for displaying the percentage of edges where the reverse edge also exists.
     :param graph:
-    :return:
+    :return:the percentage of edges where the reverse edge also exists.
     """
     ans = nx.reciprocity(graph, nodes=None)
     # answer: 0.41047120418848165
@@ -108,7 +108,7 @@ def is_strong_connected(graph: dict) -> bool:
     """
     Function for displaying if the graph is "strongly connected".
     :param graph:
-    :return:
+    :return: True: the graph is strongly connected; False:the graph is not strongly connected
     """
     ans = nx.is_strongly_connected(graph)
     return ans
@@ -119,7 +119,7 @@ def is_weak_connected(graph: dict) -> bool:
     """
     Function for displaying if the graph is "weakly connected".
     :param graph:
-    :return:
+    :return:True: the graph is strongly connected; False:the graph is not strongly connected
     """
     ans = nx.is_weakly_connected(graph)
     return ans
@@ -130,7 +130,7 @@ def get_dead_ends(graph) -> list:
     """
     List all airports that are "dead ends"
     :param graph:
-    :return:
+    :return: output the airports that are dead ends
     """
     out = nx.out_degree_centrality(graph)
     out_result = []
@@ -144,7 +144,7 @@ def get_time(l: str) -> int:
     """
     Get the time from the data and convert it into usable numbers.
     :param l:
-    :return:
+    :return:list of time
     """
     # retrieve timestamp from line
     t = l[9].strip()
@@ -158,7 +158,7 @@ def get_info(data): # airport data
     """
     Get the information needed from the data file.
     :param data:
-    :return:
+    :return: data information needed
     """
     node_info = []
     node_info.append(data["name"].values[0])
