@@ -34,17 +34,14 @@ def cal_distance(last_latitude, last_longitude, airport_latitude, airport_longit
     return d
 
 
-# result = open("result.txt", 'w')
-
-
 def output(graph):
     """
     Display the output of the results.
     :param graph:
     :return:
     """
-    testing = (graph.nodes)
-    print("This is the graph", testing)
+    # testing = (graph.nodes)
+    # print("This is the graph", testing)
     one = len(nx.get_node_attributes(graph, 'name'))
     print("Number of distinct airport:", one)
     two = get_distinct_countries(graph)
@@ -91,7 +88,6 @@ def get_dead_ends(graph) -> list:
     >>> get_dead_ends(['KORD', 'KSDF', 'RJBB', 'KIND', 'KMZJ', 'KJFK', 'KOAK', 'PANC', 'CYWG', 'KMKE', 'KCVG', 'KILN', 'KSEA', 'KSFO', 'KSJC', 'CYVR', 'KATL', 'KTUS', 'KONT', 'KDEN', 'EINN', 'KDFW', 'KTUL', 'KBDL', 'KRFD', 'MMLO', 'KSAN', 'KBOS', 'KLAX', 'MMGL', 'KLAS', 'KDTW'])
     ['KJFK', 'KCVG', 'KSEA', 'KSFO', 'KONT', 'KTUL', 'KBDL', 'KRFD', 'MMLO', 'KBOS', 'MMGL', 'KDTW']
     """
-    #print(graph)
     out = nx.out_degree_centrality(graph)
     out_result = []
     for key in out:
@@ -114,7 +110,7 @@ def get_time(l: str) -> int:
     t = l[9].strip()
     t = t[0:8]
     t = t.split(":")
-    #print(t)
+    # print(t)
     t = int(t[0]) * 3600 + int(t[1]) * 60 + int(t[2])  # 0
     return t
 
@@ -135,6 +131,7 @@ def get_info(data): # airport data
     countries_data = (countries.loc[countries["code"] == country_name])["name"].values[0]  # United States
     node_info.append(countries_data)
     return node_info
+
 
 def main():
     """
