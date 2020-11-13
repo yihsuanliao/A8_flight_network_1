@@ -1,4 +1,13 @@
-# import libraries
+"""
+IS590 PR - Assignment 8
+Group: Team 05
+Author: Enshi Wang (netID) student num.
+        Vivian Liao (yhliao4) 661311697
+        Cheng Chen Yang (ccy3) 657920840
+We discussed the steps and worked together through each questions via zoom.
+"""
+
+# Import libraries.
 import requests
 import pandas as pd
 import networkx as nx
@@ -8,8 +17,10 @@ import sys
 from collections import defaultdict
 import math
 
+
 def cal_distance(last_latitude, last_longitude, airport_latitude, airport_longitude):
-    """ Calculate the distance between two airports
+    """
+    Calculate the distance between two airports
     :param last_latitude:
     :param last_longitude:
     :param airport_latitude:
@@ -28,29 +39,43 @@ def cal_distance(last_latitude, last_longitude, airport_latitude, airport_longit
 
 
 def output(graph):
+    """
+    Display the output of the results.
+    :param graph:
+    :return:
+    """
     one = q1(graph)
-    print("Q1:", one)
+    print("Number of distinct airport:", one)
     two = q2(graph)
-    print("Q2:", two)
+    print("All distinct countries with airports:", two)
     three = q3(graph)
-    print("Q3:", three)
+    print("Percentage of edges:", three)
     four = q4(graph)
-    print("Q4:", four)
+    print("The graph is strongly connected:", four)
     five_1 = q5_1(graph)
-    print("Q5_1:", five_1)
+    print("The graph is weakly connected:", five_1)
     five_2 = q5_2(graph)
-    print("Q5_2:", five_2)
+    print("All airports that are 'dead ends':", five_2)
 
 
 def q1(graph: dict) -> int:
-    # How many distinct airports have been discovered?
+    """
+    Calculate the distinct airports that have been discovered.
+    :param graph:
+    :return: n: number of distinct airports
+    """
     n = len(nx.get_node_attributes(graph, 'name'))
     return n
 # answer: 58567
 
 
 def q2(graph: dict) -> list:
-    # List all the distinct countries with airports in the graph.
+    """
+    Function for listing all the distinct countries with airports in the graph.
+    :param graph:
+    :return: clist: list of the countries
+    """
+    # create an empty list
     clist = []
     country = nx.get_node_attributes(graph, 'country') # {"KORD": United States...}
     for key in country:
@@ -61,32 +86,43 @@ def q2(graph: dict) -> list:
 
 
 def q3(graph: dict) -> float:
-    # Display the percentage of edges where the reverse edge also exists. That means where it’s possible to fly
-    # directly from airport A to B, then directly back to A. [This is easy with the networkx reciprocity() function]
-    ans = nx.reciprocity(graph, nodes=None)  # 算出來不知道對不對
+    """
+    Function for displaying the percentage of edges where the reverse edge also exists.
+    :param graph:
+    :return:
+    """
+    ans = nx.reciprocity(graph, nodes=None)
     # answer: 0.41047120418848165
     return ans
 
 
 def q4(graph: dict) -> bool:
-    # Display if the graph is "strongly connected". That means it’s possible to somehow fly from each known airport
-    # to any other. Use the is_strongly_connected() function!
+    """
+    Function for displaying if the graph is "strongly connected".
+    :param graph:
+    :return:
+    """
     ans = nx.is_strongly_connected(graph)
     # 這裡還要再改，應該要是很多個true跟false，但我出來只有一個false
     return ans
 
 
 def q5_1(graph: dict) -> bool:
-    # Usually it will not be strongly connected. When it’s not, output these:
-    # Display if the graph is "weakly connected"? That means ignoring direction of flight segments,
-    # do all the airports have some sequence of flights connecting to the others?
-    # Use the is_weakly_connected() function.
+    """
+    Function for displaying if the graph is "weakly connected".
+    :param graph:
+    :return:
+    """
     ans = nx.is_weakly_connected(graph)
     return ans
 
 
 def q5_2(graph) -> list:
-    # Given the routes we have so far, list all airports that are "dead ends" (from which no known flight leaves).
+    """
+    List all airports that are "dead ends"
+    :param graph:
+    :return:
+    """
     out = nx.out_degree_centrality(graph)
     out_result = []
     for key in out:
@@ -96,6 +132,11 @@ def q5_2(graph) -> list:
 
 
 def time(l: str) -> int:
+    """
+    Get the time from the data and convert it into usable numbers.
+    :param l:
+    :return:
+    """
     # retrieve timestamp from line
     t = l[9].strip()
     t = t[0:8]
@@ -105,6 +146,11 @@ def time(l: str) -> int:
 
 
 def getinfo(data): # airport data
+    """
+    Get the information needed from the data file.
+    :param data:
+    :return:
+    """
     node_info = []
     node_info.append(data["name"].values[0])
     # Chicago O'Hare International Airport
@@ -117,6 +163,10 @@ def getinfo(data): # airport data
     return node_info
 
 def main():
+    """
+    This is the main function to process airport data, call other functions and add nodes.
+    :return:
+    """
     dic = defaultdict(list)
     callsign_uni = []
     g = nx.DiGraph()
