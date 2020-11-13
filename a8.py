@@ -5,7 +5,11 @@ Author: Enshi Wang (netID) student num.
         Vivian Liao (yhliao4) 661311697
         Cheng Chen Yang (ccy3) 657920840
 We discussed the steps and worked together through each questions via zoom.
+
+TODO: ask teacher about output and coverage is not working.
+TODO: reduce reluctant codes.
 """
+
 
 # Import libraries.
 import requests
