@@ -5,7 +5,6 @@ Author: Enshi Wang (netID) student num.
         Vivian Liao (yhliao4) 661311697
         Cheng Chen Yang (ccy3) 657920840
 We discussed the steps and worked together through each questions via zoom.
-
 TODO: reduce reluctant codes.
 """
 
@@ -144,6 +143,10 @@ def get_time(l: str) -> int:
     Get the time from the data and convert it into usable numbers.
     :param l:
     :return:time value separated as list
+    >>> get_time(['MSG', '8', '1', '1', 'A36110', '1', '2020/07/10', '00:53:04.415', '2020/07/10', '00:53:04.471', '', '', '', '', '', '', '', '', '', '', '', '0'])
+    3184
+    >>> get_time(['MSG', '8', '1', '1', 'A36110', '1', '2020/07/10', '00:53:00.592', '2020/07/10', '00:53:00.647', '', '', '', '', '', '', '', '', '', '', '', '0'])
+    3180
     """
     # retrieve timestamp from line
     t = l[9].strip()
