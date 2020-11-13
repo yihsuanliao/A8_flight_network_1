@@ -144,7 +144,7 @@ def get_time(l: str) -> int:
     """
     Get the time from the data and convert it into usable numbers.
     :param l:
-    :return:list of time
+    :return:time value separated as list
     """
     # retrieve timestamp from line
     t = l[9].strip()
