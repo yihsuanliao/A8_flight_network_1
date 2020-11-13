@@ -1,13 +1,13 @@
 """
 IS597 PR - Assignment 8
 Group: Team 05
-Author: Enshi Wang (netID) student num.
-        Vivian Liao (yhliao4) 661311697
-        Cheng Chen Yang (ccy3) 657920840
+Author: Enshi Wang       (enw12)    664221142
+        Vivian Liao      (yhliao4)  661311697
+        Cheng Chen Yang  (ccy3)     657920840
 We discussed the steps and worked together through each questions via zoom.
 TODO: reduce reluctant codes.
 """
-
+# cat airtraffic_20200710.csv | python a8.py
 
 # Import libraries.
 import requests
@@ -46,30 +46,18 @@ def output(graph):
     :param graph:
     :return:
     """
-    one = get_distinct_airports(graph)
+    one = len(nx.get_node_attributes(graph, 'name'))
     print("Number of distinct airport:", one)
     two = get_distinct_countries(graph)
     print("All distinct countries with airports:", two)
-    three = get_percentage(graph)
+    three = nx.reciprocity(graph, nodes=None)
     print("Percentage of edges:", three)
-    four = is_strong_connected(graph)
+    four = nx.is_strongly_connected(graph)
     print("The graph is strongly connected:", four)
-    five_1 = is_weak_connected(graph)
+    five_1 = nx.is_weakly_connected(graph)
     print("The graph is weakly connected:", five_1)
     five_2 = get_dead_ends(graph)
     print("All airports that are 'dead ends':", five_2)
-
-
-# Query 1
-def get_distinct_airports(graph: dict) -> int:
-    """
-    Calculate the distinct airports that have been discovered.
-    :param graph:
-    :return: n: number of distinct airports
-    """
-    n = len(nx.get_node_attributes(graph, 'name'))
-    return n
-# answer: 58567
 
 
 # Query 2
@@ -87,40 +75,6 @@ def get_distinct_countries(graph: dict) -> list:
         if c not in clist:
             clist.append(c)
     return clist
-
-
-# Query 3
-def get_percentage(graph: dict) -> float:
-    """
-    Function for displaying the percentage of edges where the reverse edge also exists.
-    :param graph:
-    :return:the percentage of edges where the reverse edge also exists.
-    """
-    ans = nx.reciprocity(graph, nodes=None)
-    # answer: 0.41047120418848165
-    return ans
-
-
-# Query 4
-def is_strong_connected(graph: dict) -> bool:
-    """
-    Function for displaying if the graph is "strongly connected".
-    :param graph:
-    :return: True: the graph is strongly connected; False:the graph is not strongly connected
-    """
-    ans = nx.is_strongly_connected(graph)
-    return ans
-
-
-# Query 5 - 1
-def is_weak_connected(graph: dict) -> bool:
-    """
-    Function for displaying if the graph is "weakly connected".
-    :param graph:
-    :return:True: the graph is strongly connected; False:the graph is not strongly connected
-    """
-    ans = nx.is_weakly_connected(graph)
-    return ans
 
 
 # Query 5 - 2
