@@ -1,5 +1,12 @@
-
-
+# import libraries
+import requests
+import pandas as pd
+import networkx as nx
+from geographiclib.geodesic import Geodesic
+geod = Geodesic.WGS84
+import sys
+from collections import defaultdict
+import math
 
 def cal_distance(last_latitude, last_longitude, airport_latitude, airport_longitude):
     """ Calculate the distance between two airports
@@ -166,15 +173,7 @@ def main():
 
 
 if __name__ == "__main__":
-    # import libraries
-    import requests
-    import pandas as pd
-    import networkx as nx
-    from geographiclib.geodesic import Geodesic
-    geod = Geodesic.WGS84
-    import sys
-    from collections import defaultdict
-    import math
+
     # load data
     airports = pd.read_csv("airports.csv")
     countries = pd.read_csv("countries.csv")
