@@ -1,27 +1,13 @@
-# import libraries
-import requests
-import pandas as pd
-import networkx as nx
-from geographiclib.geodesic import Geodesic
-geod = Geodesic.WGS84
-import sys
-from collections import defaultdict
-import math
 
-# load data
-airports = pd.read_csv("airports.csv")
-countries = pd.read_csv("countries.csv")
 
 
 def cal_distance(last_latitude, last_longitude, airport_latitude, airport_longitude):
     """ Calculate the distance between two airports
-
     :param last_latitude:
     :param last_longitude:
     :param airport_latitude:
     :param airport_longitude:
     :return:
-
     >>> d = cal_distance(-41.32, 174.81, 40.96, -5.50)
     10777.36
     >>> d = cal_distance(41.32, 174.81, 40.96, 5.50)
@@ -111,6 +97,17 @@ def time(l: str) -> int:
     return t
 
 
+def getinfo(data): # airport data
+    node_info = []
+    node_info.append(data["name"].values[0])
+    # Chicago O'Hare International Airport
+    # Louisville Muhammad Ali International Airport
+    node_info.append(data["latitude_deg"].values[0])
+    node_info.append(data["longitude_deg"].values[0])
+    country_name = data["iso_country"].values[0]  # US
+    countries_data = (countries.loc[countries["code"] == country_name])["name"].values[0]  # United States
+    node_info.append(countries_data)
+    return node_info
 
 def main():
     dic = defaultdict(list)
@@ -150,29 +147,35 @@ def main():
                     for k in range(len(route)):
                         # get information(mane, lat, long, country) from each element in route
                         airport_data = airports.loc[airports["ident"] == route[k]]
-                        airport_name = airport_data["name"].values[0]
-                        # Chicago O'Hare International Airport
-                        # Louisville Muhammad Ali International Airport
-                        airport_lat = airport_data["latitude_deg"].values[0]
-                        airport_long = airport_data["longitude_deg"].values[0]
-                        country_name = airport_data["iso_country"].values[0]  # US
-                        countries_data = (countries.loc[countries["code"] == country_name])["name"].values[0] # United States
+                        info = getinfo(airport_data)
+                        # print(info) # name, lat, long, country
                         # add node and those information
-                        g.add_node(route[k], name=airport_name, country=countries_data, latitude=airport_lat,
-                                   longitude=airport_long)
+                        g.add_node(route[k], name=info[0], country=info[3], latitude=info[1],
+                                   longitude=info[2])
                         if k != 0:  # if k = 0, there will be no distance
                             if g.has_edge(route[k - 1], route[k]) is False:  # if edge not exist, calculate distance
-                                distance = cal_distance(airport_lat, airport_long, last_lat, last_long)
+                                distance = cal_distance(info[1], info[2], last_lat, last_long)
                                 g.add_edge(route[k - 1], route[k], Flights=[callsign], distance=distance)
                             else:
                                 # update flights attribute (append)
                                 g[route[k - 1]][route[k]]['Flights'].append(callsign)
-                        last_lat = airport_lat
-                        last_long = airport_long
+                        last_lat = info[1]
+                        last_long = info[2]
                         # print("show nodes data", g.nodes)
                         # print("show edges:", g.edges.data())
 
 
 if __name__ == "__main__":
+    # import libraries
+    import requests
+    import pandas as pd
+    import networkx as nx
+    from geographiclib.geodesic import Geodesic
+    geod = Geodesic.WGS84
+    import sys
+    from collections import defaultdict
+    import math
+    # load data
+    airports = pd.read_csv("airports.csv")
+    countries = pd.read_csv("countries.csv")
     main()
-
