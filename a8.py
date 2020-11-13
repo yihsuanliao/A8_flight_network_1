@@ -21,10 +21,10 @@ import math
 def cal_distance(last_latitude, last_longitude, airport_latitude, airport_longitude):
     """
     Calculate the distance between two airports
-    :param last_latitude:
-    :param last_longitude:
-    :param airport_latitude:
-    :param airport_longitude:
+    :param last_latitude: the next latitude
+    :param last_longitude: the next longtitude
+    :param airport_latitude: the original latitude
+    :param airport_longitude: the original longitude
     :return:
     >>> d = cal_distance(-41.32, 174.81, 40.96, -5.50)
     10777.36
@@ -44,21 +44,22 @@ def output(graph):
     :param graph:
     :return:
     """
-    one = q1(graph)
+    one = get_distinct_airports(graph)
     print("Number of distinct airport:", one)
-    two = q2(graph)
+    two = get_distinct_countries(graph)
     print("All distinct countries with airports:", two)
-    three = q3(graph)
+    three = get_percentage(graph)
     print("Percentage of edges:", three)
-    four = q4(graph)
+    four = is_strong_connected(graph)
     print("The graph is strongly connected:", four)
-    five_1 = q5_1(graph)
+    five_1 = is_weak_connected(graph)
     print("The graph is weakly connected:", five_1)
-    five_2 = q5_2(graph)
+    five_2 = get_dead_ends(graph)
     print("All airports that are 'dead ends':", five_2)
 
 
-def q1(graph: dict) -> int:
+# Query 1
+def get_distinct_airports(graph: dict) -> int:
     """
     Calculate the distinct airports that have been discovered.
     :param graph:
@@ -69,7 +70,8 @@ def q1(graph: dict) -> int:
 # answer: 58567
 
 
-def q2(graph: dict) -> list:
+# Query 2
+def get_distinct_countries(graph: dict) -> list:
     """
     Function for listing all the distinct countries with airports in the graph.
     :param graph:
@@ -85,7 +87,8 @@ def q2(graph: dict) -> list:
     return clist
 
 
-def q3(graph: dict) -> float:
+# Query 3
+def get_percentage(graph: dict) -> float:
     """
     Function for displaying the percentage of edges where the reverse edge also exists.
     :param graph:
@@ -96,18 +99,19 @@ def q3(graph: dict) -> float:
     return ans
 
 
-def q4(graph: dict) -> bool:
+# Query 4
+def is_strong_connected(graph: dict) -> bool:
     """
     Function for displaying if the graph is "strongly connected".
     :param graph:
     :return:
     """
     ans = nx.is_strongly_connected(graph)
-    # 這裡還要再改，應該要是很多個true跟false，但我出來只有一個false
     return ans
 
 
-def q5_1(graph: dict) -> bool:
+# Query 5 - 1
+def is_weak_connected(graph: dict) -> bool:
     """
     Function for displaying if the graph is "weakly connected".
     :param graph:
@@ -117,7 +121,8 @@ def q5_1(graph: dict) -> bool:
     return ans
 
 
-def q5_2(graph) -> list:
+# Query 5 - 2
+def get_dead_ends(graph) -> list:
     """
     List all airports that are "dead ends"
     :param graph:
@@ -131,7 +136,7 @@ def q5_2(graph) -> list:
     return out_result
 
 
-def time(l: str) -> int:
+def get_time(l: str) -> int:
     """
     Get the time from the data and convert it into usable numbers.
     :param l:
@@ -145,7 +150,7 @@ def time(l: str) -> int:
     return t
 
 
-def getinfo(data): # airport data
+def get_info(data): # airport data
     """
     Get the information needed from the data file.
     :param data:
@@ -174,7 +179,7 @@ def main():
     for line in sys.stdin:
         line = line.split(",")
         callsign = line[10].strip()
-        timestamp = time(line)
+        timestamp = get_time(line)
         interval = 15 * 60
         # when inputting a new data, setting a new startpoint from the first line in the new data
         # (it should be less than the old one)
@@ -204,7 +209,7 @@ def main():
                     for k in range(len(route)):
                         # get information(mane, lat, long, country) from each element in route
                         airport_data = airports.loc[airports["ident"] == route[k]]
-                        info = getinfo(airport_data)
+                        info = get_info(airport_data)
                         # print(info) # name, lat, long, country
                         # add node and those information
                         g.add_node(route[k], name=info[0], country=info[3], latitude=info[1],
@@ -224,7 +229,7 @@ def main():
 
 if __name__ == "__main__":
 
-    # load data
+    # Load data and create as variables.
     airports = pd.read_csv("airports.csv")
     countries = pd.read_csv("countries.csv")
     main()
