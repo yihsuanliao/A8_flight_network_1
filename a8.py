@@ -1,12 +1,11 @@
 """
-IS590 PR - Assignment 8
+IS597 PR - Assignment 8
 Group: Team 05
 Author: Enshi Wang (netID) student num.
         Vivian Liao (yhliao4) 661311697
         Cheng Chen Yang (ccy3) 657920840
 We discussed the steps and worked together through each questions via zoom.
 
-TODO: ask teacher about output and coverage is not working.
 TODO: reduce reluctant codes.
 """
 
@@ -150,6 +149,7 @@ def get_time(l: str) -> int:
     t = l[9].strip()
     t = t[0:8]
     t = t.split(":")
+    #print(t)
     t = int(t[0]) * 3600 + int(t[1]) * 60 + int(t[2])  # 0
     return t
 
