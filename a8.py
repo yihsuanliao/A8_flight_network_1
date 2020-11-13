@@ -5,10 +5,7 @@ Author: Enshi Wang       (enw12)    664221142
         Vivian Liao      (yhliao4)  661311697
         Cheng Chen Yang  (ccy3)     657920840
 We discussed the steps and worked together through each questions via zoom.
-TODO: reduce reluctant codes.
 """
-# cat airtraffic_20200710.csv | python a8.py
-
 # Import libraries.
 import requests
 import pandas as pd
@@ -46,6 +43,8 @@ def output(graph):
     :param graph:
     :return:
     """
+    testing = (graph.nodes)
+    print("This is the graph", testing)
     one = len(nx.get_node_attributes(graph, 'name'))
     print("Number of distinct airport:", one)
     two = get_distinct_countries(graph)
@@ -66,6 +65,10 @@ def get_distinct_countries(graph: dict) -> list:
     Function for listing all the distinct countries with airports in the graph.
     :param graph:
     :return: clist: list of the countries
+    >>> get_distinct_countries(['KORD', 'KSDF', 'RJBB', 'KIND'])
+    ['United States', 'Japan']
+    >>> get_distinct_countries(['KORD', 'KSDF', 'RJBB', 'KIND', 'KMZJ', 'KJFK', 'KOAK', 'PANC', 'CYWG', 'KMKE', 'KCVG', 'KILN', 'KSEA', 'KSFO', 'KSJC'])
+    ['United States', 'Japan', 'Canada']
     """
     # create an empty list
     clist = []
@@ -83,9 +86,6 @@ def get_dead_ends(graph) -> list:
     List all airports that are "dead ends"
     :param graph:
     :return: output the airports that are dead ends
-    >>> get_dead_ends()
-    ['KSDF', 'KIND']
-    写不出来
     """
     #print(graph)
     out = nx.out_degree_centrality(graph)
@@ -197,4 +197,7 @@ if __name__ == "__main__":
     # Load data and create as variables.
     airports = pd.read_csv("airports.csv")
     countries = pd.read_csv("countries.csv")
+    # Execute the main function.
     main()
+
+    # cat airtraffic_20200710.csv | python a8.py
