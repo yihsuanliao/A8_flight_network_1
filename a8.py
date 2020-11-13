@@ -129,7 +129,11 @@ def get_dead_ends(graph) -> list:
     List all airports that are "dead ends"
     :param graph:
     :return: output the airports that are dead ends
+    >>> get_dead_ends()
+    ['KSDF', 'KIND']
+    写不出来
     """
+    #print(graph)
     out = nx.out_degree_centrality(graph)
     out_result = []
     for key in out:
