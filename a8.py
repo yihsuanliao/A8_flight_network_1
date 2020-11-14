@@ -62,9 +62,18 @@ def get_distinct_countries(graph: dict) -> list:
     Function for listing all the distinct countries with airports in the graph.
     :param graph:
     :return: clist: list of the countries
-    >>> get_distinct_countries(['KORD', 'KSDF', 'RJBB', 'KIND'])
+    >>> G = nx.DiGraph()
+    >>> G.add_node("KORD", country="United States")
+    >>> G.add_node("KSDF", country="United States")
+    >>> G.add_node("RJBB", country="Japan")
+    >>> get_distinct_countries(G)
     ['United States', 'Japan']
-    >>> get_distinct_countries(['KORD', 'KSDF', 'RJBB', 'KIND', 'KMZJ', 'KJFK', 'KOAK', 'PANC', 'CYWG', 'KMKE', 'KCVG', 'KILN', 'KSEA', 'KSFO', 'KSJC'])
+    >>> G = nx.DiGraph()
+    >>> G.add_node("KORD", country="United States")
+    >>> G.add_node("KSDF", country="United States")
+    >>> G.add_node("RJBB", country="Japan")
+    >>> G.add_node("CYWG", country="Canada")
+    >>> get_distinct_countries(G)
     ['United States', 'Japan', 'Canada']
     """
     # create an empty list
@@ -83,10 +92,13 @@ def get_dead_ends(graph) -> list:
     List all airports that are "dead ends"
     :param graph:
     :return: output the airports that are dead ends
-    >>> get_dead_ends(['KORD', 'KSDF', 'RJBB', 'KIND', 'KMZJ', 'KJFK', 'KOAK', 'PANC', 'CYWG', 'KMKE', 'KCVG', 'KILN', 'KSEA', 'KSFO', 'KSJC', 'CYVR', 'KATL', 'KTUS', 'KONT', 'KDEN', 'EINN', 'KDFW', 'KTUL', 'KBDL', 'KRFD'])
-    ['KIND', 'KJFK', 'KCVG', 'KSEA', 'KSFO', 'KONT', 'KTUL', 'KBDL', 'KRFD']
-    >>> get_dead_ends(['KORD', 'KSDF', 'RJBB', 'KIND', 'KMZJ', 'KJFK', 'KOAK', 'PANC', 'CYWG', 'KMKE', 'KCVG', 'KILN', 'KSEA', 'KSFO', 'KSJC', 'CYVR', 'KATL', 'KTUS', 'KONT', 'KDEN', 'EINN', 'KDFW', 'KTUL', 'KBDL', 'KRFD', 'MMLO', 'KSAN', 'KBOS', 'KLAX', 'MMGL', 'KLAS', 'KDTW'])
-    ['KJFK', 'KCVG', 'KSEA', 'KSFO', 'KONT', 'KTUL', 'KBDL', 'KRFD', 'MMLO', 'KBOS', 'MMGL', 'KDTW']
+    >>> G = nx.DiGraph()
+    >>> G.add_edge("A", "B")
+    >>> G.add_edge("A", "C")
+    >>> G.add_edge("C", "B")
+    >>> G.add_edge("C", "D")
+    >>> get_dead_ends(G)
+    ['B', 'D']
     """
     out = nx.out_degree_centrality(graph)
     out_result = []
