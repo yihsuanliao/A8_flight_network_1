@@ -17,7 +17,7 @@ from collections import defaultdict
 import math
 
 
-def cal_distance(last_latitude, last_longitude, airport_latitude, airport_longitude):
+def cal_distance(last_latitude: float, last_longitude: float, airport_latitude: float, airport_longitude: float) -> float:
     """
     Calculate the distance between two airports
     :param last_latitude: the next latitude
@@ -40,8 +40,6 @@ def output(graph):
     :param graph:
     :return:
     """
-    # testing = (graph.nodes)
-    # print("This is the graph", testing)
     one = len(nx.get_node_attributes(graph, 'name'))
     print("Number of distinct airport:", one)
     two = get_distinct_countries(graph)
@@ -99,7 +97,6 @@ def get_dead_ends(graph) -> list:
     >>> G.add_edge("C", "D")
     >>> get_dead_ends(G)
     ['B', 'D']
-
     """
     out = nx.out_degree_centrality(graph)
     out_result = []
@@ -123,12 +120,11 @@ def get_time(l: str) -> int:
     t = l[9].strip()
     t = t[0:8]
     t = t.split(":")
-    # print(t)
     t = int(t[0]) * 3600 + int(t[1]) * 60 + int(t[2])  # 0
     return t
 
 
-def get_info(data):  # airport data
+def get_info(data) -> list:  # airport data
     """
     Get the information needed from the data file.
     :param data:
@@ -169,9 +165,8 @@ def main():
         # output the result every 15 minutes
         if timestamp >= startpoint + interval:  # 0 + 5 = 5
             output(g)
-            startpoint = timestamp # 5
+            startpoint = timestamp  # 5
             print()
-            # print(startpoint)
         if callsign != "":  # if callsign has value
             aircrafthex = line[4]
             if callsign not in dic[aircrafthex]:  # we only want the unique callsigns for one aircrafthex
@@ -191,7 +186,6 @@ def main():
                         # get information(mane, lat, long, country) from each element in route
                         airport_data = airports.loc[airports["ident"] == route[k]]
                         info = get_info(airport_data)
-                        # print(info) # name, lat, long, country
                         countries_data = (countries.loc[countries["code"] == info[3]])["name"].values[0]  # United States
                         # add node and those information
                         g.add_node(route[k], name=info[0], country=countries_data, latitude=info[1],
@@ -205,8 +199,6 @@ def main():
                                 g[route[k - 1]][route[k]]['Flights'].append(callsign)
                         last_lat = info[1]
                         last_long = info[2]
-                        # print("show nodes data", g.nodes)
-                        # print("show edges:", g.edges.data())
 
 
 if __name__ == "__main__":
