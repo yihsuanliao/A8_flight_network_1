@@ -1,3 +1,14 @@
+# Import libraries.
+import requests
+import pandas as pd
+import networkx as nx
+from geographiclib.geodesic import Geodesic
+import sys
+from collections import defaultdict
+import math
+geod = Geodesic.WGS84
+
+
 """
 IS597 PR - Assignment 8
 Group: Team 05
@@ -11,18 +22,10 @@ Enshi and Vivian solved the 5 questions. For optimizing the structure, Cheng Che
 functions. Next,Enshi and Vivian Wrote the docstring and doctests separately. Last, Cheng Chen helped fix some bugs in
 our doctests.
 """
-# Import libraries.
-import requests
-import pandas as pd
-import networkx as nx
-from geographiclib.geodesic import Geodesic
-geod = Geodesic.WGS84
-import sys
-from collections import defaultdict
-import math
 
 
-def cal_distance(last_latitude: float, last_longitude: float, airport_latitude: float, airport_longitude: float) -> float:
+def cal_distance(last_latitude: float, last_longitude: float, airport_latitude: float, airport_longitude: float) -> \
+        float:
     """
     Calculate the distance between two airports
     :param last_latitude: the next latitude
@@ -39,7 +42,7 @@ def cal_distance(last_latitude: float, last_longitude: float, airport_latitude: 
     return d
 
 
-def output(graph):
+def output(graph: nx.DiGraph):
     """
     Display the output of the results.
     :param graph:
@@ -60,7 +63,7 @@ def output(graph):
 
 
 # Query 2
-def get_distinct_countries(graph: dict) -> list:
+def get_distinct_countries(graph: nx.DiGraph) -> list:
     """
     Function for listing all the distinct countries with airports in the graph.
     :param graph:
@@ -81,7 +84,7 @@ def get_distinct_countries(graph: dict) -> list:
     """
     # create an empty list
     clist = []
-    country = nx.get_node_attributes(graph, 'country') # {"KORD": United States...}
+    country = nx.get_node_attributes(graph, 'country')  # {"KORD": United States...}
     for key in country:
         c = country[key]
         if c not in clist:
@@ -90,7 +93,7 @@ def get_distinct_countries(graph: dict) -> list:
 
 
 # Query 5 - 2
-def get_dead_ends(graph) -> list:
+def get_dead_ends(graph: nx.DiGraph) -> list:
     """
     List all airports that are "dead ends"
     :param graph:
@@ -111,30 +114,33 @@ def get_dead_ends(graph) -> list:
     return out_result
 
 
-def get_time(l: str) -> int:
+def get_time(ln: list) -> int:
     """
     Get the time from the data and convert it into usable numbers.
-    :param l:
+    :param ln:
     :return:time value separated as list
-    >>> get_time(['MSG', '8', '1', '1', 'A36110', '1', '2020/07/10', '00:53:04.415', '2020/07/10', '00:53:04.471', '', '', '', '', '', '', '', '', '', '', '', '0'])
+    >>> get_time(['MSG', '8', '1', '1', 'A36110', '1', '2020/07/10', '00:53:04.415', '2020/07/10', '00:53:04.471', '', \
+    '', '', '', '', '', '', '', '', '', '', '0'])
     3184
-    >>> get_time(['MSG', '8', '1', '1', 'A36110', '1', '2020/07/10', '00:53:00.592', '2020/07/10', '00:53:00.647', '', '', '', '', '', '', '', '', '', '', '', '0'])
+    >>> get_time(['MSG', '8', '1', '1', 'A36110', '1', '2020/07/10', '00:53:00.592', '2020/07/10', '00:53:00.647', '', \
+    '', '', '', '', '', '', '', '', '', '', '0'])
     3180
     """
     # retrieve timestamp from line
-    t = l[9].strip()
+    t = ln[9].strip()
     t = t[0:8]
     t = t.split(":")
     t = int(t[0]) * 3600 + int(t[1]) * 60 + int(t[2])  # 0
     return t
 
 
-def get_info(data) -> list:  # airport data
+def get_info(data: pd.DataFrame) -> list:  # airport data
     """
     Get the information needed from the data file.
     :param data:
     :return: data information needed
-    >>> d = {"name": ["Chicago O'Hare International Airport"], "latitude_deg": ["-41.32"], "longitude_deg": ["174.81"], "iso_country": ["US"]}
+    >>> d = {"name": ["Chicago O'Hare International Airport"], "latitude_deg": ["-41.32"], "longitude_deg": ["174.81"],\
+     "iso_country": ["US"]}
     >>> df = pd.DataFrame(data=d)
     >>> get_info(df)
     ["Chicago O'Hare International Airport", '-41.32', '174.81', 'US']
@@ -177,7 +183,8 @@ def main():
             if callsign not in dic[aircrafthex]:  # we only want the unique callsigns for one aircrafthex
                 dic[aircrafthex].append(callsign)  # like {'a': [1, 2, 3], 'z': [6, 7]}
             # check if callsign appeared before
-            # create a list for unique callsign, since we only need to get information from callsign when we first see it
+            # create a list for unique callsign, since we only need to get information from callsign when we first see \
+            # it
             if callsign not in callsign_uni:
                 callsign_uni.append(callsign)
                 url = "https://opensky-network.org/api/routes?callsign=" + callsign
@@ -186,12 +193,12 @@ def main():
                     route = r.json()["route"]
                     last_lat = 0
                     last_long = 0
-                    distance = 0
                     for k in range(len(route)):
                         # get information(mane, lat, long, country) from each element in route
                         airport_data = airports.loc[airports["ident"] == route[k]]
                         info = get_info(airport_data)
-                        countries_data = (countries.loc[countries["code"] == info[3]])["name"].values[0]  # United States
+                        countries_data = (countries.loc[countries["code"] == info[3]])["name"].values[0]
+                        # United States
                         # add node and those information
                         g.add_node(route[k], name=info[0], country=countries_data, latitude=info[1],
                                    longitude=info[2])
@@ -205,6 +212,7 @@ def main():
                         last_lat = info[1]
                         last_long = info[2]
 
+
 if __name__ == "__main__":
 
     # Load data and create as variables.
@@ -212,5 +220,4 @@ if __name__ == "__main__":
     countries = pd.read_csv("countries.csv")
     # Execute the main function.
     main()
-
     # cat airtraffic_20200710.csv | python a8.py
