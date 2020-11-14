@@ -5,11 +5,11 @@ Author: Enshi Wang       (enw12)    664221142
         Vivian Liao      (yhliao4)  661311697
         Cheng Chen Yang  (ccy3)     657920840
 Report:
-We discussed the steps and worked together through each questions via zoom. We discussed how to read the data
-and request the information in Opensky.Cheng Chen wrote the code to graph the data. After the data were loaded,
-Enshi and Vivian solved the 5 questions. For optimizing the structure, Cheng Chen splitted the questions
-into modeule via function. Next,Enshi and Vivian Wrote the docstring and doctests separately. Cheng Chen
-helped to fix some bugs in our doctests.
+We discussed the steps and worked together through each questions via zoom, such as how to read the data from the
+terminal and request the information in Opensky.Cheng Chen wrote the code to graph the data. After the data were loaded,
+Enshi and Vivian solved the 5 questions. For optimizing the structure, Cheng Chen split the codes into several
+functions. Next,Enshi and Vivian Wrote the docstring and doctests separately. Last, Cheng Chen helped fix some bugs in
+our doctests.
 """
 # Import libraries.
 import requests
