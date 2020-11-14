@@ -99,6 +99,7 @@ def get_dead_ends(graph) -> list:
     >>> G.add_edge("C", "D")
     >>> get_dead_ends(G)
     ['B', 'D']
+
     """
     out = nx.out_degree_centrality(graph)
     out_result = []
@@ -127,11 +128,15 @@ def get_time(l: str) -> int:
     return t
 
 
-def get_info(data): # airport data
+def get_info(data):  # airport data
     """
     Get the information needed from the data file.
     :param data:
     :return: data information needed
+    >>> d = {"name": ["Chicago O'Hare International Airport"], "latitude_deg": ["-41.32"], "longitude_deg": ["174.81"], "iso_country": ["US"]}
+    >>> df = pd.DataFrame(data=d)
+    >>> get_info(df)
+    ["Chicago O'Hare International Airport", '-41.32', '174.81', 'US']
     """
     node_info = []
     node_info.append(data["name"].values[0])
@@ -139,9 +144,7 @@ def get_info(data): # airport data
     # Louisville Muhammad Ali International Airport
     node_info.append(data["latitude_deg"].values[0])
     node_info.append(data["longitude_deg"].values[0])
-    country_name = data["iso_country"].values[0]  # US
-    countries_data = (countries.loc[countries["code"] == country_name])["name"].values[0]  # United States
-    node_info.append(countries_data)
+    node_info.append(data["iso_country"].values[0])  # US
     return node_info
 
 
@@ -189,8 +192,9 @@ def main():
                         airport_data = airports.loc[airports["ident"] == route[k]]
                         info = get_info(airport_data)
                         # print(info) # name, lat, long, country
+                        countries_data = (countries.loc[countries["code"] == info[3]])["name"].values[0]  # United States
                         # add node and those information
-                        g.add_node(route[k], name=info[0], country=info[3], latitude=info[1],
+                        g.add_node(route[k], name=info[0], country=countries_data, latitude=info[1],
                                    longitude=info[2])
                         if k != 0:  # if k = 0, there will be no distance
                             if g.has_edge(route[k - 1], route[k]) is False:  # if edge not exist, calculate distance
